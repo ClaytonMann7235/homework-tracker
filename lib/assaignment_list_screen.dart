@@ -53,6 +53,11 @@ void toggleCompleted(int index,bool? value){
     assignments[index]['completed'] = value ?? false;
   });
 }
+void deleteAssignment(int index) {
+  setState(() {
+    assignments.removeAt(index);
+  });
+}
 @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -68,6 +73,11 @@ Widget build(BuildContext context) {
           onChanged: (value) {
             toggleCompleted(index, value);
           },
+          secondary: IconButton(
+            icon: const Icon(Icons.delete),
+            tooltip: 'Delete assignment',
+            onPressed: () => deleteAssignment(index),
+          ),
         );
       },
     ),
@@ -77,5 +87,4 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 }
