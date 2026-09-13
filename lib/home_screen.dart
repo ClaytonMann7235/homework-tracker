@@ -6,14 +6,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF800000), // Maroon background
+      backgroundColor: const Color.fromARGB(255, 7, 7, 7), // Maroon turned to black background
       body: Center(
         child: Text(
           'Welcome to Homework Tracker',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.pink, // Pink text for contrast
+            color: const Color.fromARGB(255, 251, 250, 250), // Pink text for contrast
           ),
         ),
       ),

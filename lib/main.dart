@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'dart:async';
+import 'main_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,9 +41,10 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     // Timer waits 3 seconds, then navigates to HomeScreen
     Timer(Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder:(_) => const MainNavigationScreen()),
+      );
+      
     });
   }
 
