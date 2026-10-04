@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../Presenters/course_presenter.dart';
 
 class CourseListScreen extends StatefulWidget {
@@ -10,6 +11,19 @@ class CourseListScreen extends StatefulWidget {
 
 class _CourseListScreenState extends State<CourseListScreen> {
   final CoursePresenter presenter = CoursePresenter();
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    _loadCourses();
+  }
+
+  Future<void> _loadCourses() async {
+    await presenter.loadCourses();
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   void _showAddCourseDialog() {
     String name = '';
@@ -29,7 +43,9 @@ class _CourseListScreenState extends State<CourseListScreen> {
               ),
               const SizedBox(height: 12),
               TextField(
-                decoration: const InputDecoration(labelText: 'Description (optional)'),
+                decoration: const InputDecoration(
+                  labelText: 'Description (optional)',
+                ),
                 onChanged: (value) => description = value,
               ),
             ],
@@ -62,17 +78,24 @@ class _CourseListScreenState extends State<CourseListScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Courses')),
-      body: courses.isEmpty
-          ? const Center(child: Text('No courses yet.'))
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: courses.length,
               itemBuilder: (context, index) {
                 final course = courses[index];
                 return ListTile(
                   title: Text(course.name),
-                  subtitle: course.description != null && course.description!.isNotEmpty
+                  subtitle: course.description != null
                       ? Text(course.description!)
                       : null,
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () {
+                      presenter.removeCourse(index);
+                      setState(() {});
+                    },
+                  ),
                 );
               },
             ),

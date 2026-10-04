@@ -5,25 +5,24 @@ class AssignmentPresenter {
 
   List<Assignment> get assignments => _assignments;
 
-  void addAssignment(String title) {
-    final trimmedTitle = title.trim();
-    if (trimmedTitle.isEmpty) return;
-    _assignments.add(Assignment(title: trimmedTitle));
+  Future<void> loadAssignments() async {
+    final fetched = await Assignment.fetchAssignments();
+    _assignments
+      ..clear()
+      ..addAll(fetched);
+  }
+  Future<void> addAssignments(String title) async {
+    final newAssignment = Assignment(title: title);
+    await Assignment.addAssignment(newAssignment);
+    _assignments.add(newAssignment);
   }
 
-  void toggleCompleted(int index) {
-    if (index >= 0 && index < _assignments.length) {
-      _assignments[index].isCompleted = !_assignments[index].isCompleted;
-    }
-  }
+  Future<void> toggleCompleted(int index) async {
+    if (index < 0 || index >= _assignments.length) return;
 
-  void deleteAssignment(int index) {
-    if (index >= 0 && index < _assignments.length) {
-      _assignments.removeAt(index);
-    }
+    await Assignment.updateCompletionStatus(index, _assignments);
+    _assignments[index].isCompleted = !_assignments[index].isCompleted;
   }
+  
 
-  void deleteAllAssignments() {
-    _assignments.clear();
-  }
 }
