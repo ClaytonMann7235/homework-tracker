@@ -4,7 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 class Assignment {
   final String title;
   bool isCompleted;
-  Assignment({required this.title, this.isCompleted = false});
+  final String courseName;
+  Assignment({required this.title, required this.courseName, this.isCompleted = false});
 
   static final _db = FirebaseDatabase.instance.ref();
   static final _auth = FirebaseAuth.instance;
@@ -22,6 +23,7 @@ class Assignment {
         if (value is Map) {
           assignments.add(Assignment(
             title: value['title']?.toString() ?? '',
+            courseName: value['courseName'] ?? 'Unknown',
             isCompleted: value['isCompleted'] == true,
           ));
         }
@@ -31,14 +33,15 @@ class Assignment {
     return assignments;
   }
 
-  static Future<void> addAssignment(Assignment assignment) async {
+  static Future<void> addAssignment(String title, String courseName, {bool isCompleted = false}) async {
     final userID = _auth.currentUser?.uid;
     if (userID == null) return;
 
     final newRef = _db.child('assignments').child(userID).push();
     await newRef.set({
-      'title': assignment.title,
-      'isCompleted': assignment.isCompleted,
+      'title': title,
+      'courseName': courseName,
+      'isCompleted': isCompleted,
     });
   }
 

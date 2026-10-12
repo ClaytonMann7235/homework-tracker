@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../widgets.dart/add_fab.dart';
 import '../Presenters/course_presenter.dart';
 
 class CourseListScreen extends StatefulWidget {
@@ -84,24 +84,39 @@ class _CourseListScreenState extends State<CourseListScreen> {
               itemCount: courses.length,
               itemBuilder: (context, index) {
                 final course = courses[index];
-                return ListTile(
-                  title: Text(course.name),
-                  subtitle: course.description != null
-                      ? Text(course.description!)
-                      : null,
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () {
-                      presenter.removeCourse(index);
-                      setState(() {});
-                    },
-                  ),
+                return _CourseListTile(
+                  course: course,
+                  onDelete: () {
+                    presenter.removeCourse(index);
+                    setState(() {});
+                  },
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: AddFAB(
         onPressed: _showAddCourseDialog,
-        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class _CourseListTile extends StatelessWidget {
+  final dynamic course;
+  final VoidCallback onDelete;
+
+  const _CourseListTile({
+    required this.course,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(course.name),
+      subtitle: course.description != null ? Text(course.description!) : null,
+      trailing: IconButton(
+        icon: const Icon(Icons.delete_outline),
+        onPressed: onDelete,
       ),
     );
   }
